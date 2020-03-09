@@ -29,32 +29,22 @@ def get_current_namedays(country='pl'):
     return r_data_filter
 
 
-# def get_nameday_list(name_to_check):
-#     """
-#     :param name_to_check: Polish name or None
-#     :return:  A list of days on which a name day falls for the given name.
-#             When 'name_to_check' is None than it returns a list of names that are celebrating today.
-#             When 'name_to_check'  is not correct or is not in the database, it returns an empty list.
-#     """
-#     try:
-#         if name_to_check:
-#             r = requests.post("http://www.kalendarzswiat.pl/imieniny/", data={'name': name_to_check})
-#             r.encoding = 'utf-8'
-#             tree = html.fromstring(r.text)
-#             data = tree.xpath('/html/body/div[1]/div[2]/div[2]/div[1]/div[3]/div/ul/li/text()')
-#
-#         else:
-#             r = requests.get("http://www.kalendarzswiat.pl/imieniny/")
-#             r.encoding = 'utf-8'
-#             tree = html.fromstring(r.text)
-#             data = tree.xpath('/html/body/div[1]/div[2]/div[2]/div[1]/p[3]/b/text()')
-#
-#     except Exception as exception:
-#         print(f'Ups something goes wrongs: {exception}')
-#         exit()
-#
-#     return data
-#
+def get_namedays_list(name_to_check, country='pl'):
+    try:
+        parameters = {'country': country, 'name': name_to_check}
+        r = requests.get('https://api.abalin.net/getdate?', params=parameters)
+        r.encoding = 'utf-8'
+        r_data = r.json()
+        r_data_filter = []
+        for item in (r_data['results']):
+            day = item['day']
+            month = item['month']
+            r_data_filter.append((day, month))
+        print(r_data_filter)
+        return r_data_filter
+    except KeyError as e:
+        print(f"Ups something goes wrongs: We don't have {e} for {name_to_check}. Please provide a valid name!")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Program to check when the name-days is.\n'
@@ -63,7 +53,22 @@ if __name__ == "__main__":
                         help="The name for which we want to check when the name day is. "
                              "If you don't give this argument, it returns a list of names that are celebrating today. "
                              "If name is not correct or is not in the database, it returns an empty list")
+    parser.add_argument("-c", '--country',
+                        choices=['cz', 'sk', 'pl', 'fr', 'hu', 'hr', 'se', 'us', 'at', 'it', 'es', 'de', 'dk', 'fi',
+                                 'bg', 'lt', 'ee', 'lv', 'gr', 'ru'], default='pl',
+                        help="Choose which country you want to check"
+                             "Default is 'pl'"
+                             "List of supported countries and country codes: "
+                             f"Austria [at], Germany [de], Spain [es], Greece [gr], Italy [it], Poland [pl],"
+                             f" Slovakia [sk], Bulgaria [bg], Denmark [dk], Finland [fi], Croatia [hr], "
+                             f"Lithuania [lt], Russian Federation [ru], United States of America [us], Czechia [cz], "
+                             f"Estonia [ee],  France [fr], Hungary [hu], Latvia [lv], Sweden [se]"
+                        )
+
     args = parser.parse_args()
     name = args.name
-    get_current_namedays()
-
+    country = args.country
+    if name:
+        get_namedays_list(name, country)
+    else:
+        get_current_namedays(country)
