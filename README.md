@@ -5,8 +5,8 @@ Data are taken from API https://api.abalin.net/
 
 ## List of supported countries and country codes:
 Austria [at], Germany [de], Spain [es], Greece [gr], Italy [it], Poland [pl], Slovakia [sk],
-Bulgaria [bg], Denmark [dk], Finland [fi], Croatia [hr], Lithuania [lt], Russian Federation [ru], "
-United States of America [us], Czechia [cz], Estonia [ee],  France [fr], Hungary [hu], Latvia [lv], Sweden [se]"
+Bulgaria [bg], Denmark [dk], Finland [fi], Croatia [hr], Lithuania [lt], Russian Federation [ru],
+United States of America [us], Czechia [cz], Estonia [ee],  France [fr], Hungary [hu], Latvia [lv], Sweden [se]
 
 ## Requirements
 - Python 3.8
