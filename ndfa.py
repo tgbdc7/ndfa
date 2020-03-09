@@ -1,6 +1,7 @@
 """
 Program to check when the name day is.
 Returns a list of days on which a name day falls for the given name.
+Data are taken from API https://api.abalin.net/
 """
 try:
     import argparse
